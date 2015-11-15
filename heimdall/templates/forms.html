@@ -1,0 +1,19 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="jumbotron">
+  <div class="container">
+    <h1>Calibrate your Heimdall!</h1>
+    <p>Tell us the height of the sensor and we'll set things up for you.</p>
+    <form action="/calibrate/" method="post" id="formDiv">
+        {% csrf_token %}
+        {{ form }}
+        <input id="heightInput" type="submit" value="Submit" />
+    </form>
+    <p>   </p>
+    <p>   </p>
+  </div>
+</div>
+
+
+{% endblock %}

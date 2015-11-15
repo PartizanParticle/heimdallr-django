@@ -1,0 +1,108 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Heimdallr</title>
+
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static "styles.css" %}">
+    <link rel="shortcut icon" href="{% static "images/icons/favicon.ico" %}">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="navbr">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="../home/">Heimdallr</a>
+        </div>
+
+        <div>
+          <ul class="nav navbar-nav navbar-right" id="aboutButton">
+
+            <li><a href="../about/">About</a><li>
+          </ul>
+          <ul class="nav navbar-nav">
+            <li><a href="../graphs/">Graphs</a><li>
+          </ul>
+          <ul class="nav navbar-nav">
+            <li><a href="../history/">History</a><li>
+          </ul>
+          <ul class="nav navbar-nav">
+            <li><a href="../calibrate/">Calibrate</a><li>
+          </ul>
+
+        </div>
+
+      </div>
+    </nav>
+
+    <div class="container" id="cards">
+    <div class="row-fluid">
+      <div class="col-md-6 col-md-offset-3">
+        {% if user_list %}
+          {% for user in user_list %}
+            <div class="thumbnail">
+                <img src="{% static "images/users/" %}{{user.img_name}}" alt="{static "images/users/defaults/fail.jpg"%}" >
+                <h3>Time: {{user.press_time|date:"P"}}</h3>
+                <p>Date: {{user.press_time|date:"D d M Y"}}</p>
+                <p>Height: {{user.height|floatformat:"1"}} cm</p>
+
+            </div>
+          {% endfor %}
+        {% else %}
+            <div class="thumbnail">
+                <img src="{% static "images/users/defaults/fail.jpg" %}" alt="{static "images/users/defaults/fail.jpg"%}" >
+                <h3>No History to display</h3>
+
+            </div>
+        {% endif %}
+      </div>
+    </div>
+    </div>
+
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <!-- for auto refreshing every 5 seconds, can be changed -->
+    <script>
+      //function timedRefresh(timeoutPeriod){
+        //setTimeout("location.reload(true)",timeoutPeriod)
+      //}
+
+      function refreshPage(){
+        var page_y=$(document).scrollTop();
+        window.location.href=window.location.href.split('?')[0]+'?page_y='+page_y;
+      }
+
+      window.onload = function(){
+        setTimeout(refreshPage, 30000);
+        if(window.location.href.indexOf('page_y') != -1){
+          var match = window.location.href.split('?')[1].split("&")[0].split("=");
+          $('html,body').scrollTop(match[1]);
+        }
+      }
+    </script>
+
+  </body>
+</html>

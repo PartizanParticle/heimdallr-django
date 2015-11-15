@@ -1,0 +1,76 @@
+{% extends "index.html" %}
+
+{% block graph_init %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:['line','corechart']});
+      google.setOnLoadCallback(drawCharts);
+      function drawCharts() {
+        var data = google.visualization.arrayToDataTable([
+          ['Day', 'Frequency'],
+
+          {% if sorted_times %}
+
+            {% for day, freq in sorted_times.items %}
+            ['{{day}}', {{freq}}],
+            {% endfor %}
+            ]);
+          {% endif %}
+
+        var options = {
+          title: 'Frequency of button press',
+          legend: { position: 'none' },
+        };
+
+        {% if temp_data %}
+        var temp_data = new google.visualization.DataTable();
+        temp_data.addColumn('number', 'Hour')
+        temp_data.addColumn('number', 'Temperature')
+        temp_data.addColumn('number', 'Humidity')
+
+        temp_data.addRows([
+          {% for hour, temp in temp_data.items %}
+          [{{hour}}, {{temp.temperature}}, {{temp.humidity}}],
+          {% endfor %}
+        ]);
+
+        var options2 = {
+          chart:{
+            title: 'Temperature vs Hours Elapsed'
+          },
+          width: 1200,
+          height: 500,
+          series: {
+            0: {axis: 'Temp'},
+            1: {axis: 'Humi'}
+          },
+          axes: {
+            y: {
+              Temp: {label:'temperature (celsius)'},
+              Humi: {label:'Relative Humidity (%)'}
+            }
+          }
+        };
+
+
+        var chart2 = new google.charts.Line(document.getElementById('line_div'));
+        chart2.draw(temp_data, options2);
+        {% endif %}
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
+
+
+{% endblock %}
+
+{% block content%}
+
+ <div id="chart_div" style="width: 1200px; height: 500px; margin: 0 auto;"></div>
+
+ <div id="line_div" style="width: 1200px; height: 500px; margin: 0 auto; margin-top:20px;"></div>
+
+
+{% endblock %}
